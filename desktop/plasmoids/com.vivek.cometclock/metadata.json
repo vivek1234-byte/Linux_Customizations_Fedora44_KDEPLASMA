@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Id": "com.vivek.cometclock",
+        "Name": "Comet Clock",
+        "Description": "Animated desktop clock: rolling digits, shimmering gradient, comet seconds trail",
+        "Icon": "preferences-system-time",
+        "Category": "Date and Time",
+        "Authors": [{ "Name": "vivek" }],
+        "License": "GPL-2.0+",
+        "Version": "1.0"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

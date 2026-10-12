@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 128 128" width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe259"/>
+      <stop offset="100%" stop-color="#ffa751"/>
+    </linearGradient>
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffa751" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffa751" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Background glow -->
+  <circle cx="64" cy="64" r="56" fill="url(#starGlow)"/>
+  <circle cx="64" cy="64" r="52" fill="#181a20" fill-opacity="0.65" stroke="url(#starGrad)" stroke-width="2" stroke-opacity="0.4"/>
+  <!-- Four-pointed star -->
+  <path d="M 64,20 Q 64,64 108,64 Q 64,64 64,108 Q 64,64 20,64 Q 64,64 64,20 Z"
+        fill="url(#starGrad)"/>
+  <!-- Small satellite sparkle -->
+  <circle cx="86" cy="42" r="3.5" fill="#ffe259"/>
+  <circle cx="42" cy="86" r="2.5" fill="#ffe259" opacity="0.8"/>
+</svg>

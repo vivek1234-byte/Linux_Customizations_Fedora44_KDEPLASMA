@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Fetch with a picture logo from ~/.config/fastfetch/images (kitty only; other
+# terminals get the coloured braille logo). Pictures rotate through a shuffled
+# queue; double-click the picture to switch to the next one (ff-logo.py).
+# Add pictures: drop them in ~/Pictures/ff and run `ff-images`.
+cfg="$HOME/.config/fastfetch"
+if [[ ( -n $KITTY_WINDOW_ID || $TERM == xterm-kitty ) && -z $TMUX && -z $STY ]]; then
+    exec "$cfg/ff-logo.py" show
+fi
+exec fastfetch -c "$cfg/config.jsonc"

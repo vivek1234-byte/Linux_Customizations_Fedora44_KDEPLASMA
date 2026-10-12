@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 128 128" width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ff4b1f"/>
+      <stop offset="100%" stop-color="#ff9068"/>
+    </linearGradient>
+    <linearGradient id="innerFlame" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ffb347"/>
+      <stop offset="100%" stop-color="#ffcc33"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="54" fill="#1b1c22" fill-opacity="0.7" stroke="url(#flameGrad)" stroke-width="2.5" stroke-opacity="0.5"/>
+  <!-- Outer flame -->
+  <path d="M 64,24 C 67,42 78,48 84,58 C 92,72 86,92 72,100 C 60,107 46,101 40,88 C 36,80 39,72 43,67 C 46,63 47,56 43,51 C 41,48 40,44 41,39 C 45,43 51,46 54,43 C 58,40 60,32 64,24 Z"
+        fill="url(#flameGrad)"/>
+  <!-- Inner core flame -->
+  <path d="M 64,54 C 66,66 72,70 73,77 C 75,85 70,93 62,95 C 55,96 48,91 48,84 C 48,79 51,75 53,72 C 55,69 55,64 53,60 C 56,63 60,63 61,59 C 62,57 63,55 64,54 Z"
+        fill="url(#innerFlame)"/>
+</svg>

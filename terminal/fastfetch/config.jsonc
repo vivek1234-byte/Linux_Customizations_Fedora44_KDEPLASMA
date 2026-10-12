@@ -1,0 +1,126 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "builtin",
+    "source": "fedora_small",
+    "padding": {
+      "top": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "key": {
+      "width": 10
+    },
+    "disableLinewrap": true,
+    "percent": {
+      "color": {
+        "green": "#8EC5FF",
+        "yellow": "#C3A6FF",
+        "red": "#F7A8C4"
+      }
+    }
+  },
+  "modules": [
+    "break",
+    "break",
+    "break",
+    {
+      "type": "title",
+      "format": "\u001b[38;2;94;90;140m \u001b[38;2;247;168;196m\u2726 {user-name-colored}{at-symbol-colored}{host-name-colored} \u001b[38;2;247;168;196m\u2726 ",
+      "color": {
+        "user": "#F7A8C4",
+        "at": "#6C6470",
+        "host": "#8EC5FF"
+      }
+    },
+    {
+      "type": "os",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;142;197;255m\udb82\udcdb  os\u001b[38;2;94;90;140m",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "kernel",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;195;166;255m\udb80\udf3d  kernel\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "de",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;247;168;196m\udb80\udf79  de\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "wm",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;142;197;255m\udb81\uddb2  wm\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "theme",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;195;166;255m\udb80\ude7c  theme\u001b[38;2;94;90;140m",
+      "format": "{theme1}"
+    },
+    {
+      "type": "icons",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;247;168;196m\udb80\udc3b  icons\u001b[38;2;94;90;140m",
+      "format": "{icons1}"
+    },
+    {
+      "type": "cursor",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;142;197;255m\udb80\uddc0  cursor\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "terminal",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;195;166;255m\udb80\udd8d  term\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "terminalfont",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;247;168;196m\udb80\ude81  font\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "shell",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;142;197;255m\udb84\udd83  shell\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "packages",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;195;166;255m\udb80\udfd6  pkgs\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "cpu",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;247;168;196m\udb81\ude1a  cpu\u001b[38;2;94;90;140m",
+      "format": "{name}"
+    },
+    {
+      "type": "gpu",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;142;197;255m\udb82\udcae  gpu\u001b[38;2;94;90;140m",
+      "hideType": "integrated",
+      "format": "{name}"
+    },
+    {
+      "type": "memory",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;195;166;255m\udb80\udf5b  ram\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "disk",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;247;168;196m\udb80\udeca  disk\u001b[38;2;94;90;140m",
+      "folders": "/"
+    },
+    {
+      "type": "battery",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;142;197;255m\udb80\udc79  battery\u001b[38;2;94;90;140m",
+      "format": "{capacity} [{status}]"
+    },
+    {
+      "type": "uptime",
+      "key": "\u001b[38;2;94;90;140m \u001b[38;2;195;166;255m\udb80\udd50  uptime\u001b[38;2;94;90;140m"
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[38;2;94;90;140m"
+    },
+    "break",
+    {
+      "type": "colors",
+      "symbol": "circle",
+      "paddingLeft": 2
+    }
+  ]
+}

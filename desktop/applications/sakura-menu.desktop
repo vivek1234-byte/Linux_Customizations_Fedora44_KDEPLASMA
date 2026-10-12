@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Apps
+Comment=Open the application menu
+Icon=@HOME@/.local/share/icons/aesthetic-launchers/sakura-blossom.svg
+Exec=qdbus-qt6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.activateLauncherMenu
+StartupNotify=false
+NoDisplay=true

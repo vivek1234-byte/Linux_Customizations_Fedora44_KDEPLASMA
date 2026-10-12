@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Id": "com.vivek.sakura",
+        "Name": "Sakura Breeze",
+        "Description": "Your picture with sakura petals drifting across it",
+        "Icon": "preferences-desktop-wallpaper",
+        "Authors": [{ "Name": "vivek" }],
+        "License": "GPL-2.0+",
+        "Version": "1.0"
+    },
+    "KPackageStructure": "Plasma/Wallpaper",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

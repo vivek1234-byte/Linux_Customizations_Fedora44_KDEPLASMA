@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Id": "com.vivek.island",
+        "Name": "Dynamic Island",
+        "Description": "iPhone-style pill for the top panel: shows what is playing and expands on hover",
+        "Icon": "media-playback-start",
+        "Category": "Multimedia",
+        "Authors": [{ "Name": "vivek" }],
+        "License": "GPL-2.0+",
+        "Version": "1.0"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

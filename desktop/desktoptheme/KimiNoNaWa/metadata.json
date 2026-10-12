@@ -1,0 +1,15 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "Aesthetic"
+            }
+        ],
+        "Description": "A twilight-inspired Plasma theme matching the Kimi no Na wa wallpaper aesthetic",
+        "Id": "KimiNoNaWa",
+        "Name": "Kimi no Na wa",
+        "Website": ""
+    },
+    "X-Plasma-API": "5.0"
+}
