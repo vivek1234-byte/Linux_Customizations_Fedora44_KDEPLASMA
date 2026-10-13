@@ -3,14 +3,19 @@ import QtQuick.Particles
 import org.kde.plasma.plasmoid
 import org.kde.taskmanager as TaskManager
 
-// A still picture with sakura petals drifting across it on the breeze.
-// Petals pause while the focused window is maximised/fullscreen (saves battery).
+// A still picture with sakura petals drifting across it on the breeze, plus a
+// music visualizer (Visualizer.qml) while something is playing. Petals dance
+// harder with the music. Everything pauses while the focused window is
+// maximised/fullscreen (saves battery).
 WallpaperItem {
     id: root
     readonly property real density: (root.configuration.Density ?? 100) / 100
+    // loudness from the visualizer (0 when silent), makes the petals dance
+    readonly property real music: viz.item && viz.item.visible ? viz.item.energy : 0
 
     Rectangle { anchors.fill: parent; color: "#1b1530" }
     Image {
+        id: picture
         anchors.fill: parent
         source: root.configuration.Image
         fillMode: Image.PreserveAspectCrop
@@ -19,6 +24,23 @@ WallpaperItem {
         sourceSize.height: root.height * Screen.devicePixelRatio
         opacity: status === Image.Ready ? 1 : 0
         Behavior on opacity { NumberAnimation { duration: 600 } }
+    }
+
+    // ── music visualizer (in its own file so a problem there can't break the wallpaper) ──
+    Loader {
+        id: viz
+        anchors.fill: parent
+        asynchronous: true
+        source: "Visualizer.qml"
+        onLoaded: {
+            item.picture = picture
+            item.paused = Qt.binding(() => root.covered)
+        }
+    }
+    Connections {
+        target: viz.item
+        ignoreUnknownSignals: true
+        function onBeat(s) { if (s > 0.75) gust.burst(Math.round(1 + s * 2)) }
     }
 
     // ── is the desktop covered? ──
@@ -74,38 +96,39 @@ WallpaperItem {
         entryEffect: ImageParticle.Fade
     }
 
-    // from the top edge, drifting down and to the right
+    // all petals start just above the top edge and float down slowly
+    // (steady speeds, no gravity build-up, nothing from the sides)
     Emitter {
         system: sys; group: "far"
-        x: -root.width * 0.3; y: -30; width: root.width * 1.1; height: 10
-        emitRate: 3.5 * root.density; lifeSpan: 22000
+        x: 0; y: -30; width: root.width; height: 10
+        emitRate: 3.0 * root.density * (1 + root.music * 0.8); lifeSpan: 40000
         size: 13; sizeVariation: 5
-        velocity: AngleDirection { angle: 68; angleVariation: 12; magnitude: 38; magnitudeVariation: 12 }
+        velocity: AngleDirection { angle: 88; angleVariation: 10; magnitude: 30; magnitudeVariation: 6 }
     }
     Emitter {
         system: sys; group: "near"
-        x: -root.width * 0.3; y: -40; width: root.width * 1.1; height: 10
-        emitRate: 1.6 * root.density; lifeSpan: 15000
+        x: 0; y: -40; width: root.width; height: 10
+        emitRate: 1.4 * root.density * (1 + root.music * 0.8); lifeSpan: 30000
         size: 26; sizeVariation: 9
-        velocity: AngleDirection { angle: 62; angleVariation: 14; magnitude: 70; magnitudeVariation: 25 }
+        velocity: AngleDirection { angle: 86; angleVariation: 10; magnitude: 44; magnitudeVariation: 8 }
     }
     Emitter {
         system: sys; group: "near2"
-        x: -root.width * 0.3; y: -40; width: root.width * 1.1; height: 10
-        emitRate: 1.0 * root.density; lifeSpan: 15000
+        x: 0; y: -40; width: root.width; height: 10
+        emitRate: 0.9 * root.density * (1 + root.music * 0.8); lifeSpan: 30000
         size: 22; sizeVariation: 8
-        velocity: AngleDirection { angle: 64; angleVariation: 14; magnitude: 64; magnitudeVariation: 22 }
-    }
-    // a few blown in from the left side
-    Emitter {
-        system: sys; group: "near"
-        x: -40; y: 0; width: 10; height: root.height * 0.55
-        emitRate: 0.5 * root.density; lifeSpan: 14000
-        size: 24; sizeVariation: 8
-        velocity: AngleDirection { angle: 18; angleVariation: 14; magnitude: 95; magnitudeVariation: 25 }
+        velocity: AngleDirection { angle: 90; angleVariation: 10; magnitude: 40; magnitudeVariation: 8 }
     }
 
-    // breeze: side-to-side sway + light gravity
-    Wander { system: sys; anchors.fill: parent; xVariance: 55; yVariance: 18; pace: 90; affectedParameter: Wander.Velocity }
-    Gravity { system: sys; anchors.fill: parent; angle: 90; magnitude: 4 }
+    // on big beats a few extra petals start falling from the top (same gentle speed)
+    Emitter {
+        id: gust
+        system: sys; group: "near"; enabled: false
+        x: 0; y: -40; width: root.width; height: 10
+        lifeSpan: 30000; size: 24; sizeVariation: 8
+        velocity: AngleDirection { angle: 88; angleVariation: 10; magnitude: 44; magnitudeVariation: 8 }
+    }
+
+    // breeze: gentle side-to-side sway, a little livelier with music
+    Wander { system: sys; anchors.fill: parent; xVariance: 30 + root.music * 12; yVariance: 6; pace: 45 + root.music * 25; affectedParameter: Wander.Velocity }
 }

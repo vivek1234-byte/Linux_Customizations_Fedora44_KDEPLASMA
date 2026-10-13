@@ -9,6 +9,7 @@ BACKUP=$(cat "$STATE/LAST_BACKUP")
 read -rp "Restore the files saved in $BACKUP and remove the installed widgets? [y/N] " a
 [[ ${a,,} == y* ]] || exit 0
 
+systemctl --user disable --now sakura-viz.service 2>/dev/null
 systemctl --user stop plasma-plasmashell.service 2>/dev/null
 
 # 1. delete what install.sh added (newest first, skip duplicates)
@@ -27,6 +28,7 @@ if [[ -f $BACKUP/MANIFEST ]]; then
     done
 fi
 fc-cache -f ~/.local/share/fonts >/dev/null 2>&1
+systemctl --user daemon-reload 2>/dev/null
 systemctl --user start plasma-plasmashell.service 2>/dev/null
 (qdbus-qt6 org.kde.KWin /KWin reconfigure || qdbus org.kde.KWin /KWin reconfigure) >/dev/null 2>&1
 rm -f "$STATE/ADDED" "$STATE/LAST_BACKUP"
@@ -35,6 +37,6 @@ cat <<'MSG'
 
 Done. Packages were not removed. To remove them too:
   sudo dnf remove wavetask && sudo dnf copr remove vcalles/wavetask
-  sudo dnf remove atuin du-dust duf git-delta glow procs tealdeer
+  sudo dnf remove atuin du-dust duf git-delta glow procs tealdeer cava
   git config --global --unset core.pager   # stop using delta for git
 MSG

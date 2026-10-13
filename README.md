@@ -2,7 +2,8 @@
 
 An anime-themed (*Kimi no Na wa* / sakura) setup for **Fedora 44 KDE Plasma 6.7**: a kitty terminal with
 picture logos, fish-style autosuggestions and modern CLI tools, plus a desktop with an animated comet clock,
-an iPhone-style Dynamic Island, falling sakura petals, a Pomodoro widget and a macOS-style zoom dock.
+an iPhone-style Dynamic Island, falling sakura petals, a **music visualizer built into the wallpaper**,
+a Pomodoro widget and a macOS-style zoom dock.
 
 Most desktop pieces are **custom QML widgets written for this setup**. They aren't downloaded from anywhere and are all in this repo.
 One command installs everything, and one command undoes it.
@@ -124,6 +125,7 @@ Powerline-style prompt with pastel segments: OS icon → user → directory → 
 | **procs** | `ps` | `procs --sortd cpu` |
 | **glow** | — | `glow README.md` (renders markdown) |
 | **btop**, **lazygit** | — | system monitor, git TUI |
+| **cava** | — | `cava` in a terminal: audio bars in the same pink → lilac → sky colours |
 
 ---
 
@@ -165,11 +167,34 @@ An iPhone-style pill at the top centre of the desktop that **only appears while 
 <br clear="right">
 
 ### 🌸 Sakura Breeze wallpaper — `desktop/wallpapers/com.vivek.sakura`
-- Your picture plus **sakura petals drifting on the breeze**: two depth layers (small faint far petals, bigger near
-  petals), different tints, spinning, swaying side to side and blown in from the left.
+- Your picture plus **sakura petals falling gently from the top**: two depth layers (small faint far petals, bigger
+  near petals), different tints, spinning and swaying softly. All petals fall at a calm, steady speed.
 - **Battery friendly:** the petals pause while the focused window is maximised or fullscreen.
 - Settings (right-click desktop → *Desktop and Wallpaper*): picture path and **petal amount** (0–300 %).
 - Also used as the **lock screen** wallpaper, so the petals fall there too (`Meta+L`).
+
+### 🎶 Music visualizer (inside the wallpaper) — `Visualizer.qml` + `desktop/visualizer/`
+![Visualizer](docs/screenshots/visualizer.png)
+
+When music or a video plays (anything with MPRIS: Spotify, YouTube in the browser, VLC…), the wallpaper comes alive:
+- **Candy bars:** glowing, rounded bars in sakura-pink → lilac → sky-blue, each with a glossy shine stripe and a soft
+  reflection on the ground. Bass is in the middle, right under the picture's light pillar.
+- **Hearts on the peaks:** a little heart rides on top of every lively bar, jumps with the beat and floats back down.
+- **The picture reacts:** the light pillar and the star where the comets meet **pulse with the bass**, and strong
+  beats send **ripple rings** out from the star.
+- **Floating cute bits:** on beats, hearts and ♪ ♫ notes float up and sparkles pop from the tallest bars.
+- **Pink ground haze** under the bars that glows with the volume, plus a few extra petals when the music is loud.
+- Fades in when a song starts and out a few seconds after it stops. Nothing runs while it's quiet.
+- It's part of the wallpaper, not a window: no taskbar or Alt+Tab entry, no click blocking, and it sits behind
+  your widgets. It pauses while a maximised window is focused.
+
+How it works: `sakura-viz-bridge` (user service `sakura-viz.service`) starts **cava** only while a player is playing
+and keeps the newest frame of 56 bar heights in `$XDG_RUNTIME_DIR/sakura-viz/frame`. The wallpaper reads that file
+every frame. Plasma needs `QML_XHR_ALLOW_FILE_READ=1` for that; the installer adds it as a small systemd drop-in for
+plasmashell. Bar logic runs at 60 fps even on 144 Hz screens to keep CPU use low.
+
+The light-star position fits the *Kimi no Na wa* comet wallpaper (`starU: 0.5`, `starV: 0.712` in `Visualizer.qml`).
+For another picture, change those two numbers to where its bright spot is (0–1 of the picture's width/height).
 
 ### 🪟 Zoom dock — Wave Task Manager
 ![Dock](docs/screenshots/dock.png)
@@ -222,6 +247,8 @@ title and controls. Add it from *right-click desktop → Add Widgets → "Now Pl
 | Name in the greeting | `~/.local/share/plasma/plasmoids/com.vivek.cometclock/contents/ui/ClockFace.qml` → `userName` |
 | Clock / island colours | `sky`, `sakura`, `glow` properties at the top of each widget's QML |
 | Wallpaper picture / petal amount | right-click desktop → *Desktop and Wallpaper* |
+| Visualizer colours, size, hearts | `cTop` / `cMid` / `cBot`, `stageW`, `maxH` in `com.vivek.sakura/contents/ui/Visualizer.qml` |
+| Visualizer sensitivity / bar count | `~/.config/sakura-viz/cava.conf` (then `systemctl --user restart sakura-viz`) |
 | Focus / break length | `FocusMinutes` / `BreakMinutes` in `com.vivek.focus/contents/config/main.xml` |
 | Dock skin, icon size, zoom | right-click the dock → *Configure Wave Task Manager…* |
 | Terminal colours, opacity, font | `~/.config/kitty/kitty.conf` |
@@ -254,9 +281,11 @@ terminal/
   bash/bashrc.d/    aesthetic.sh (prompt, zoxide, fzf, eza, bat, history, resize redraw), tools.sh (atuin, yazi, ble.sh colours)
   git/              delta.gitconfig (reference)
   lazygit/          config.yml (delta pager)
+  cava/             config (themed colours for cava in a terminal)
 desktop/
   plasmoids/        com.vivek.cometclock, com.vivek.island, com.vivek.focus, com.vivek.nowplaying
-  wallpapers/       com.vivek.sakura (petals wallpaper plugin)
+  wallpapers/       com.vivek.sakura (petals wallpaper + Visualizer.qml)
+  visualizer/       sakura-viz-bridge, cava.conf, sakura-viz.service, plasmashell-xhr.conf
   layout/           apply-layout.js (Plasma script that places everything)
   applications/     sakura-menu.desktop (dock "Apps" button)
   fonts/            Poppins, Great Vibes (+ OFL licences)
@@ -276,6 +305,10 @@ docs/screenshots/
   then re-run `./install.sh --desktop`.
 - **Prompt looks broken / boxes instead of icons.** Set kitty's font to *JetBrainsMono Nerd Font* (the installer does this).
 - **ble.sh feels slow on a very old machine.** Remove the two `kde-rice: ble.sh` blocks from `~/.bashrc`.
+- **No visualizer while music plays.** Check `systemctl --user status sakura-viz` and that
+  `$XDG_RUNTIME_DIR/sakura-viz/frame` keeps changing. Also check that plasmashell got the setting:
+  `systemctl --user show plasma-plasmashell -p Environment` should list `QML_XHR_ALLOW_FILE_READ=1`
+  (restart plasmashell after installing).
 - **A widget shows an error.** `journalctl --user -b | grep -i vivek` shows the QML error.
 
 ---
@@ -287,5 +320,5 @@ docs/screenshots/
 - Downloaded by the installer (not stored here): [ble.sh](https://github.com/akinomyoga/ble.sh), [yazi](https://github.com/sxyazi/yazi),
   [starship](https://starship.rs), [JetBrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts),
   [Wave Task Manager](https://github.com/vickoc911/org.vicko.wavetask), [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN),
-  [isnet-anime via rembg](https://github.com/danielgatis/rembg).
+  [isnet-anime via rembg](https://github.com/danielgatis/rembg), [cava](https://github.com/karlstav/cava) (from Fedora).
 - Wallpaper and character art shown in the screenshots belong to their respective owners and are **not** distributed here.

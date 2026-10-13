@@ -79,7 +79,7 @@ WALLPAPER=""
 if (( DO_TERMINAL )); then
     step "Terminal: packages (needs sudo)"
     PKGS=(kitty fastfetch fzf zoxide eza bat btop lazygit
-          atuin du-dust duf git-delta glow procs tealdeer
+          atuin du-dust duf git-delta glow procs tealdeer cava
           python3-pillow curl unzip xz)
     info "${PKGS[*]}"
     if ask "Install these with dnf?"; then
@@ -122,6 +122,7 @@ if (( DO_TERMINAL )); then
     put "$REPO/terminal/bash/bashrc.d/aesthetic.sh" ~/.bashrc.d/aesthetic.sh
     put "$REPO/terminal/bash/bashrc.d/tools.sh"  ~/.bashrc.d/tools.sh
     put "$REPO/terminal/lazygit/config.yml"      ~/.config/lazygit/config.yml
+    put "$REPO/terminal/cava/config"             ~/.config/cava/config
     for f in config.jsonc cutout.py design.py ff-logo.py make-images.py; do
         put "$REPO/terminal/fastfetch/$f" ~/.config/fastfetch/$f
     done
@@ -252,6 +253,24 @@ if (( DO_DESKTOP )); then
     backup ~/.config/kscreenlockerrc
     kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin com.vivek.sakura
     kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group com.vivek.sakura --group General --key Image "$WALLPAPER"
+
+    step "Desktop: music visualizer in the wallpaper (cava)"
+    if ! command -v cava >/dev/null; then
+        if ask "cava is needed for the visualizer — install it with dnf?" y; then
+            sudo dnf install -y cava || echo "  cava install failed — the wallpaper works without the visualizer"
+        fi
+    fi
+    put "$REPO/desktop/visualizer/sakura-viz-bridge" ~/.local/bin/sakura-viz-bridge
+    chmod +x ~/.local/bin/sakura-viz-bridge
+    put "$REPO/desktop/visualizer/cava.conf" ~/.config/sakura-viz/cava.conf
+    added "$HOME/.config/sakura-viz"
+    put "$REPO/desktop/visualizer/sakura-viz.service" ~/.config/systemd/user/sakura-viz.service
+    # plasmashell may read the visualizer frames (QML XMLHttpRequest on a local file)
+    put "$REPO/desktop/visualizer/plasmashell-xhr.conf" ~/.config/systemd/user/plasma-plasmashell.service.d/sakura-viz.conf
+    systemctl --user daemon-reload
+    systemctl --user enable --now sakura-viz.service >/dev/null 2>&1 \
+        || echo "  could not start sakura-viz.service — run: systemctl --user enable --now sakura-viz"
+    info "plays along whenever an MPRIS player (Spotify, browser, VLC…) is playing"
 
     step "Desktop: placing widgets (plasmashell restarts, the screen flickers once)"
     backup ~/.config/plasma-org.kde.plasma.desktop-appletsrc

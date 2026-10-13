@@ -1,0 +1,66 @@
+#!/usr/bin/python3 -I
+"""Feeds the Sakura Breeze wallpaper's music visualizer.
+
+While any MPRIS player is playing, runs cava (raw ascii output, config
+~/.config/sakura-viz/cava.conf) and keeps the newest frame in
+$XDG_RUNTIME_DIR/sakura-viz/frame  ("v1;v2;...;" with values 0..1000).
+The wallpaper polls that file every frame. When playback stops, cava is
+stopped and the file removed, so nothing runs while it's quiet.
+"""
+import os, signal, subprocess, sys, threading, time
+
+RUN = os.path.join(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"), "sakura-viz")
+FRAME, TMP = os.path.join(RUN, "frame"), os.path.join(RUN, ".frame.tmp")
+CONF = os.path.expanduser("~/.config/sakura-viz/cava.conf")
+LINGER = 8          # seconds cava keeps running after playback stops
+
+def playing():
+    try:
+        names = subprocess.run(["busctl", "--user", "list", "--no-legend"],
+                               capture_output=True, text=True, timeout=3).stdout.split("\n")
+        for line in names:
+            name = line.split(" ", 1)[0]
+            if not name.startswith("org.mpris.MediaPlayer2."):
+                continue
+            st = subprocess.run(["busctl", "--user", "get-property", name, "/org/mpris/MediaPlayer2",
+                                 "org.mpris.MediaPlayer2.Player", "PlaybackStatus"],
+                                capture_output=True, text=True, timeout=3).stdout
+            if "Playing" in st:
+                return True
+    except Exception:
+        pass
+    return False
+
+def pump(proc):
+    for line in proc.stdout:            # one frame per line
+        with open(TMP, "wb") as f:
+            f.write(line)
+        os.replace(TMP, FRAME)          # atomic: readers never see half a frame
+
+def stop(proc):
+    if proc and proc.poll() is None:
+        proc.terminate()
+        try: proc.wait(2)
+        except subprocess.TimeoutExpired: proc.kill()
+    try: os.unlink(FRAME)
+    except FileNotFoundError: pass
+
+def main():
+    os.makedirs(RUN, exist_ok=True)
+    proc, quiet = None, 0
+    signal.signal(signal.SIGTERM, lambda *a: (stop(proc), sys.exit(0)))
+    while True:
+        if playing():
+            quiet = 0
+            if proc is None or proc.poll() is not None:
+                proc = subprocess.Popen(["cava", "-p", CONF], stdout=subprocess.PIPE,
+                                        stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+                threading.Thread(target=pump, args=(proc,), daemon=True).start()
+        elif proc is not None:
+            quiet += 1
+            if quiet >= LINGER:
+                stop(proc); proc = None
+        time.sleep(1)
+
+if __name__ == "__main__":
+    main()
