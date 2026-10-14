@@ -227,6 +227,9 @@ if (( DO_DESKTOP )); then
     done
     put "$REPO/desktop/desktoptheme/KimiNoNaWa" ~/.local/share/plasma/desktoptheme/KimiNoNaWa
     added "$HOME/.local/share/plasma/desktoptheme/KimiNoNaWa"
+    # Breeze + a Dynamic-Island skin for panels (the left autohide tray panel becomes a glowing pill)
+    put "$REPO/desktop/desktoptheme/SakuraIsland" ~/.local/share/plasma/desktoptheme/SakuraIsland
+    added "$HOME/.local/share/plasma/desktoptheme/SakuraIsland"
 
     WITH_DOCK=no
     step "Desktop: macOS-style zoom dock (Wave Task Manager, needs sudo)"
@@ -248,6 +251,8 @@ if (( DO_DESKTOP )); then
     kwriteconfig6 --file kwinrc --group Plugins --key squashEnabled false
     "$QDBUS" org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
     plasma-apply-colorscheme --accent-color "#DA6E8A" >/dev/null 2>&1 || true
+    backup ~/.config/plasmarc
+    plasma-apply-desktoptheme SakuraIsland >/dev/null 2>&1 || true
 
     step "Desktop: lock screen (same picture + petals)"
     backup ~/.config/kscreenlockerrc

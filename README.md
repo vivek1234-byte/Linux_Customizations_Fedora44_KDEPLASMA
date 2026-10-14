@@ -155,6 +155,14 @@ An iPhone-style pill at the top centre of the desktop that **only appears while 
 - Pops in with a bounce. After a **pause it waits 8 s**, then fades away. When nothing is playing it's hidden.
 - Click the art to bring the player window forward.
 
+### 🏝 Tray Island — `desktop/desktoptheme/SakuraIsland`
+The left system-tray panel wears the same look: an indigo → plum glass **pill** with a lilac rim, a soft
+lilac glow and a glassy sheen. It auto-hides and slides in when the cursor touches the left screen edge.
+This is a Plasma theme (Breeze with only `widgets/panel-background` replaced), so any panel that draws a
+background gets the island skin; the dock keeps its own Wave Task skin.
+Colours and radius live at the top of `gen-panel-svg.py`; re-run it and re-apply the theme
+(`plasma-apply-desktoptheme default && plasma-apply-desktoptheme SakuraIsland`).
+
 ### ⏳ Focus Garden — `desktop/plasmoids/com.vivek.focus`
 <img src="docs/screenshots/focus-garden.png" width="28%" align="right" alt="Focus Garden">
 
@@ -246,6 +254,7 @@ title and controls. Add it from *right-click desktop → Add Widgets → "Now Pl
 |---|---|
 | Name in the greeting | `~/.local/share/plasma/plasmoids/com.vivek.cometclock/contents/ui/ClockFace.qml` → `userName` |
 | Clock / island colours | `sky`, `sakura`, `glow` properties at the top of each widget's QML |
+| Tray island colours / roundness | constants at the top of `desktop/desktoptheme/SakuraIsland/gen-panel-svg.py` |
 | Wallpaper picture / petal amount | right-click desktop → *Desktop and Wallpaper* |
 | Visualizer colours, size, hearts | `cTop` / `cMid` / `cBot`, `stageW`, `maxH` in `com.vivek.sakura/contents/ui/Visualizer.qml` |
 | Visualizer sensitivity / bar count | `~/.config/sakura-viz/cava.conf` (then `systemctl --user restart sakura-viz`) |
@@ -289,7 +298,7 @@ desktop/
   layout/           apply-layout.js (Plasma script that places everything)
   applications/     sakura-menu.desktop (dock "Apps" button)
   fonts/            Poppins, Great Vibes (+ OFL licences)
-  icons/ color-schemes/ desktoptheme/
+  icons/ color-schemes/ desktoptheme/   (SakuraIsland = island-styled panel skin)
 docs/screenshots/
 ```
 

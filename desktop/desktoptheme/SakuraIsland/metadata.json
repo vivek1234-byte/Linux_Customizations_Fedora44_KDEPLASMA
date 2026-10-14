@@ -1,0 +1,11 @@
+{
+    "KPlugin": {
+        "Authors": [{ "Name": "vivek" }],
+        "Description": "Breeze with a Dynamic-Island styled panel (indigo to plum glass, lilac rim, soft glow)",
+        "Id": "SakuraIsland",
+        "Name": "Sakura Island",
+        "License": "GPL-2.0+",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

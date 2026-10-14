@@ -30,6 +30,10 @@ fi
 fc-cache -f ~/.local/share/fonts >/dev/null 2>&1
 systemctl --user daemon-reload 2>/dev/null
 systemctl --user start plasma-plasmashell.service 2>/dev/null
+# re-apply whichever Plasma theme the restored plasmarc names (stock Breeze if none)
+t=$(kreadconfig6 --file plasmarc --group Theme --key name --default default)
+[[ -d ~/.local/share/plasma/desktoptheme/$t || -d /usr/share/plasma/desktoptheme/$t ]] || t=default
+plasma-apply-desktoptheme "$t" >/dev/null 2>&1
 (qdbus-qt6 org.kde.KWin /KWin reconfigure || qdbus org.kde.KWin /KWin reconfigure) >/dev/null 2>&1
 rm -f "$STATE/ADDED" "$STATE/LAST_BACKUP"
 
