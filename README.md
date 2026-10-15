@@ -160,6 +160,11 @@ The left system-tray panel wears the same look: an indigo → plum glass **pill*
 lilac glow and a glassy sheen. It auto-hides and slides in when the cursor touches the left screen edge.
 This is a Plasma theme (Breeze with only `widgets/panel-background` replaced), so any panel that draws a
 background gets the island skin; the dock keeps its own Wave Task skin.
+The panel itself is set up by `desktop/layout/apply-layout.js`: left edge, 38 px thick, floating,
+fit-to-content, centred, auto-hide, translucent, holding the app launcher (the
+[Cutoff](https://github.com/galib-i/cutoff) launcher if installed from the KDE Store, otherwise Kickoff) and
+the system tray. If you already have a left panel it is only restyled; otherwise one is created and the
+tray + launcher move into it.
 Colours and radius live at the top of `gen-panel-svg.py`; re-run it and re-apply the theme
 (`plasma-apply-desktoptheme default && plasma-apply-desktoptheme SakuraIsland`).
 

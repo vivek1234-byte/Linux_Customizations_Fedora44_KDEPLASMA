@@ -56,4 +56,35 @@ if (WITH_DOCK) {
         break;
     }
 }
+// Tray Island: launcher + system tray in a small floating, auto-hiding pill on the
+// left edge (its indigo→plum glass comes from the SakuraIsland Plasma theme).
+// Uses the Cutoff launcher when it is installed (KDE Store), Kickoff otherwise.
+var LAUNCHERS = ["com.github.galib.cutoff", "org.kde.plasma.kickoff", "org.kde.plasma.kicker",
+                 "org.kde.plasma.kickerdash"];
+var island = null;
+var all = panels();
+for (var k = 0; k < all.length; k++) {
+    if (all[k].location === "left") { island = all[k]; break; }
+}
+if (!island) {
+    // the tray and the launcher move out of the other panels into the island
+    for (var k = 0; k < all.length; k++) {
+        var aw = all[k].widgets();
+        for (var j = 0; j < aw.length; j++) {
+            if (aw[j].type === "org.kde.plasma.systemtray" || LAUNCHERS.indexOf(aw[j].type) >= 0) aw[j].remove();
+        }
+    }
+    island = new Panel("org.kde.panel");
+    island.location = "left";
+    island.addWidget(knownWidgetTypes.indexOf(LAUNCHERS[0]) >= 0 ? LAUNCHERS[0] : LAUNCHERS[1]);
+    island.addWidget("org.kde.plasma.systemtray");
+}
+island.height = 38;
+island.floating = true;
+island.lengthMode = "fit";
+island.alignment = "center";
+island.offset = 0;
+island.hiding = "autohide";
+island.opacity = "translucent";
+
 print("layout applied");
