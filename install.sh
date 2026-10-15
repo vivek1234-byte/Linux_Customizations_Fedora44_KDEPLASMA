@@ -131,6 +131,13 @@ if (( DO_TERMINAL )); then
     put "$REPO/terminal/bin/remfetch" ~/.local/bin/remfetch; chmod +x ~/.local/bin/remfetch
     ln -sf ~/.config/fastfetch/make-images.py ~/.local/bin/ff-images; added "$HOME/.local/bin/ff-images"
     mkdir -p ~/.config/fastfetch/images ~/Pictures/ff
+    # btop: the stock "matcha-dark-sea" theme with rounded corners
+    [[ -e ~/.config/btop/btop.conf ]] || added "$HOME/.config/btop/btop.conf"
+    backup ~/.config/btop/btop.conf; mkdir -p ~/.config/btop; touch ~/.config/btop/btop.conf
+    for kv in 'color_theme = "/usr/share/btop/themes/matcha-dark-sea.theme"' 'theme_background = true' 'rounded_corners = true'; do
+        k=${kv%% *}
+        grep -q "^$k " ~/.config/btop/btop.conf && sed -i "s|^$k .*|$kv|" ~/.config/btop/btop.conf || echo "$kv" >> ~/.config/btop/btop.conf
+    done
     info "configs copied (old ones backed up to $BACKUP)"
 
     step "Terminal: ~/.bashrc"
@@ -249,6 +256,9 @@ if (( DO_DESKTOP )); then
     kwriteconfig6 --file kwinrc --group Plugins --key fadeEnabled false
     kwriteconfig6 --file kwinrc --group Plugins --key glideEnabled false
     kwriteconfig6 --file kwinrc --group Plugins --key squashEnabled false
+    # borderless windows (title bar only)
+    kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key BorderSize None
+    kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key BorderSizeAuto false
     "$QDBUS" org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
     plasma-apply-colorscheme --accent-color "#DA6E8A" >/dev/null 2>&1 || true
     backup ~/.config/plasmarc
@@ -258,6 +268,15 @@ if (( DO_DESKTOP )); then
     backup ~/.config/kscreenlockerrc
     kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin com.vivek.sakura
     kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group com.vivek.sakura --group General --key Image "$WALLPAPER"
+
+    # boot splash: the "AccretionDisk" black-hole splash from the KDE Store (115 MB, not shipped here)
+    if [[ -d ~/.local/share/plasma/look-and-feel/AccretionDisk ]]; then
+        [[ -e ~/.config/ksplashrc ]] || added "$HOME/.config/ksplashrc"
+        backup ~/.config/ksplashrc
+        kwriteconfig6 --file ksplashrc --group KSplash --key Theme AccretionDisk
+    else
+        info "optional splash: System Settings → Splash Screen → Get New… → \"AccretionDisk\", then re-run"
+    fi
 
     step "Desktop: music visualizer in the wallpaper (cava)"
     if ! command -v cava >/dev/null; then

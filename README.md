@@ -222,6 +222,10 @@ For another picture, change those two numbers to where its bright spot is (0–1
 - KWin effects on: **blur**, **wobbly windows**, **magic lamp** minimise, **desktop cube**, scale, sheet,
   slide, sliding popups, dim screen. Off: fade, glide, squash.
 - **Pink accent colour** `#DA6E8A` across Plasma.
+- **Borderless windows** (title bar only, no window frame).
+- **Boot splash** "AccretionDisk" (a black-hole animation, 115 MB, from the KDE Store — not shipped here):
+  install it via *System Settings → Splash Screen → Get New…*, and the installer switches it on.
+- **btop** uses the stock `matcha-dark-sea` theme with rounded corners.
 - Extras that are installed but not switched on: colour schemes `KimiNoNaWa` and `StrawHat`
   (*System Settings → Colors*), the `KimiNoNaWa` Plasma style (*System Settings → Plasma Style*), and launcher icons in
   `~/.local/share/icons/aesthetic-launchers/` (sakura, sparkle, diamond, Fedora gold, flame crest, Toman kanji).
